@@ -13,7 +13,7 @@ public class Model {
 
 	private static final String FILENAME = "C:\\notify\\notify.txt";
 	
-	@SuppressWarnings("unused")
+	
 	private ArrayList readFile() {
 		ArrayList<String[]> notesList = new ArrayList<String[]>();
 		BufferedReader br = null;
@@ -32,7 +32,8 @@ public class Model {
 //				System.out.println(sCurrentLine);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("No file found, create a task to create it! ");
 		} finally {
 			try {
 				if (br != null)

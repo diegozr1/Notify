@@ -57,6 +57,10 @@ public class View {
     
 	private Component pane;
     
+	/**
+	 * The constructor of the View sets the initial values
+	 * for each component of the visual part of the MVC
+	 */
 	View (){
               
         
@@ -75,7 +79,8 @@ public class View {
         String[] priorities  = { "Low", "Medium", "High"};
         currentPriority = "Low";
 
-	      JComboBox priorityBox = new JComboBox(priorities);
+	      @SuppressWarnings("unchecked")
+		JComboBox priorityBox = new JComboBox(priorities);
 	      priorityBox.setSelectedIndex(0);
 	      priorityBox.addActionListener(new ActionListener(){
 
@@ -126,27 +131,6 @@ public class View {
 	        }
         });
         
-        // button update row
-//        btnUpdate.addActionListener(new ActionListener(){
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//             
-//                // i = the index of the selected row
-//                int i = table.getSelectedRow();
-//                
-//                if(i >= 0) 
-//                {
-//                   model.setValueAt(textId.getText(), i, 0);
-//                   model.setValueAt(textFname.getText(), i, 1);
-//                   model.setValueAt(textLname.getText(), i, 2);
-//                   model.setValueAt(textAge.getText(), i, 3);
-//                }else{
-//                    System.out.println("Update Error");
-//                }
-//            }
-//        });        
-        
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 updateTableData(table);
@@ -171,6 +155,7 @@ public class View {
                 }
             }
         });
+                
         
         this.preLoadNotes();
        
@@ -205,25 +190,30 @@ public class View {
 	
 	void preLoadNotes() {
 		
+		@SuppressWarnings("unchecked")
 		ArrayList<String[]> aux = this.m.getList();
-		
-		for(int i = 0; i<aux.size();i++) {
-			String[] notas = aux.get(i);			
-			row[0] = notas[0];
-	        row[1] = notas[1];                
-	        row[2] = notas[2];
-	        row[3] = notas[3];
-	        
-	        this.model.addRow(row);
-		}
-						
+//		System.out.println(aux.size());
+
+		if(!(aux.size() < 2)) 
+			for(int i = 0; i<aux.size();i++) {
+				String[] nota = aux.get(i);
+				System.out.println(Arrays.toString(nota));
+				
+				row[0] = nota[0];
+		        row[1] = nota[1];                
+		        row[2] = nota[2];
+		        row[3] = nota[3];
+		        
+		        this.model.addRow(row);
+			
+			}									
 	}
 
 	void addClickListener(ActionListener listenClick) {		
 		this.btnAdd.addActionListener(listenClick);
 	}
 	
-	protected void AddRow() {
+	protected void newNote() {
 		
 		row[0] = (0);
         row[1] = (textContent.getText().equals("")?"A note":textContent.getText());                
@@ -231,6 +221,7 @@ public class View {
         
         try {
         	row[3] = textTimeLeft.getText().equals("Set time in sec")?setTime(60):setTime(Integer.valueOf(textTimeLeft.getText()));
+        	this.groupTimer.add(Integer.valueOf(textTimeLeft.getText().equals("Set time in sec")?setTime(60):setTime(Integer.valueOf(textTimeLeft.getText()))));
         }catch(NumberFormatException e) {
         	//   e.printStackTrace();
        	 	JOptionPane.showMessageDialog(pane, "Please enter the value in seconds", "Error", 0);
@@ -243,25 +234,29 @@ public class View {
 		this.btnDelete.addActionListener(listenClick);
 	}
 	
-	protected void DeleteRow() {
+	protected void deleteNote() {
+		
      	int i = table.getSelectedRow();
          if(i >= 0){
          	if(model.getValueAt(i, 3).toString().equals("Completed")) {
          		model.removeRow(i);
          	}else {
          		JOptionPane.showMessageDialog(pane, "You can't delete a message is not completed yet", "Error", 0);
+         		return;
          	}                    
          }else{
 //             System.out.println("Delete Error");
         	 JOptionPane.showMessageDialog(pane, "Please select a note before delete", "Error", 0);
+        	 return;
          }
+         this.groupTimer.remove(i);
      }
 	
 	void completeClickListener(ActionListener completeClick) {
 		this.btnComplete.addActionListener(completeClick);
 	}
 	
-	protected void completeRow() {
+	protected void setNoteComplete() {
 		 int i = table.getSelectedRow();
          
          if(i >= 0) 
@@ -289,13 +284,14 @@ public class View {
     	JButton reset = new JButton("Reset");
 //    	long startTime = System.currentTimeMillis();
     	JLabel label2 = new JLabel();
-    	
+    	System.out.println(this.groupTimer.size());
     	new Thread() {
             int counter = 100;
             public void run() {
                 while(counter >= 0) {
 //                	label1.setText(setTime(counter++));
 //                	System.out.println(1);
+                	System.out.println(View.this.groupTimer.get(rowindex));
                     label2.setText(View.this.setTime(counter--));
                     try{
                         Thread.sleep(1000);
@@ -304,19 +300,19 @@ public class View {
             }
         }.start();
     		
-        JFrame frame = new JFrame();
-        frame.setLayout(new FlowLayout());
-        frame.setLocationRelativeTo(null);
+        JFrame timerFrame = new JFrame();
+        timerFrame.setLayout(new FlowLayout());
+        timerFrame.setLocationRelativeTo(null);
         
-        frame.add(label1);
-        frame.add(play);
-        frame.add(pause);
-        frame.add(reset);
-        frame.add(label2);
+        timerFrame.add(label1);
+        timerFrame.add(play);
+        timerFrame.add(pause);
+        timerFrame.add(reset);
+        timerFrame.add(label2);
 
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
+        timerFrame.setResizable(false);
+        timerFrame.pack();
+        timerFrame.setVisible(true);
         
 //        popupmenu.show(e.getComponent(), e.getX(), e.getY());
     	System.out.println("row"+ rowindex);
