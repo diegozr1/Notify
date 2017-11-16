@@ -11,8 +11,15 @@ Instructions to run the project
 	
 Run the docs 
 
-    - open docs/index.html in a web browser
-    - or run your own server http-server
+	- open docs/index.html in a web browser
+	- or run your own server http-server
+    
+Some patterns included
+
+	- MVC
+	- Factory 
+	- Singleton    
+ 
     
 Check the video for more information
 
