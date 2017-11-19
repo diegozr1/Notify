@@ -13,7 +13,11 @@ public class Model {
 
 	private static final String FILENAME = "C:\\notify\\notify.txt";
 	
-	
+	/**
+	 * Is the method dedicated to read the file containing the notes and returns the
+	 * notes as an arraylists  
+	 * @return ArrayList
+	 */
 	private ArrayList readFile() {
 		ArrayList<String[]> notesList = new ArrayList<String[]>();
 		BufferedReader br = null;
@@ -48,6 +52,11 @@ public class Model {
 		return notesList;
 	}
 	
+	/**
+	 * This method is used to save the notes to 
+	 * the text file under c:/notify/notify.txt
+	 * @param lines
+	 */
 	private void saveFile(String[][] lines) {		
 		try {
 			PrintWriter writer = new PrintWriter(FILENAME, "UTF-8");
@@ -59,11 +68,20 @@ public class Model {
 			e.printStackTrace();
 		}				
 	}
-	
+	/**
+	 * The protected method that triggers the read from the notes
+	 * this is used so that the real one is note directly accessed
+	 * @return
+	 */
 	protected ArrayList getList(){				
 		return this.readFile();
 	}
 		
+	/**
+	 * The protected method that receives the multidimensional array with notes from the user
+	 * to be saved in a text file at C:/notify/notify.txt
+	 * @param notes
+	 */
 	protected void setList(String[][] notes) {
 		this.saveFile(notes);
 	}

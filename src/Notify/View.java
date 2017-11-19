@@ -151,6 +151,7 @@ public class View {
                 if (rowindex < 0)
                     return;
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+
                 	VisualizeTimer(rowindex);
                 }
             }
@@ -215,13 +216,15 @@ public class View {
 	
 	protected void newNote() {
 		
+		this.groupTimer.add(Integer.valueOf(textTimeLeft.getText().equals("Set time in sec")?"60":textTimeLeft.getText()));
+		
 		row[0] = (0);
         row[1] = (textContent.getText().equals("")?"A note":textContent.getText());                
         row[2] = currentPriority;
         
         try {
         	row[3] = textTimeLeft.getText().equals("Set time in sec")?setTime(60):setTime(Integer.valueOf(textTimeLeft.getText()));
-        	this.groupTimer.add(Integer.valueOf(textTimeLeft.getText().equals("Set time in sec")?setTime(60):setTime(Integer.valueOf(textTimeLeft.getText()))));
+        	
         }catch(NumberFormatException e) {
         	//   e.printStackTrace();
        	 	JOptionPane.showMessageDialog(pane, "Please enter the value in seconds", "Error", 0);
@@ -284,19 +287,41 @@ public class View {
     	JButton reset = new JButton("Reset");
 //    	long startTime = System.currentTimeMillis();
     	JLabel label2 = new JLabel();
-    	System.out.println(this.groupTimer.size());
+//    	System.out.println(this.groupTimer.size());
+    	
+    	
+    	
+    	reset.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				label2.setText("0");
+			}
+			
+    	});
+    	
+    	
     	new Thread() {
-            int counter = 100;
+    		
+    		 String getCounter = View.this.textTimeLeft.getText();
+             String substring = (getCounter.length() > 2 )? getCounter.substring(getCounter.length() - 2) : getCounter;
+             
+            
+             int counter = Integer.valueOf(substring);
+
+           
             public void run() {
-                while(counter >= 0) {
+                while(counter>= 0) {
 //                	label1.setText(setTime(counter++));
 //                	System.out.println(1);
-                	System.out.println(View.this.groupTimer.get(rowindex));
+                	
                     label2.setText(View.this.setTime(counter--));
                     try{
                         Thread.sleep(1000);
                     } catch(Exception e) {}
                 }
+                JOptionPane.showMessageDialog(pane, "time is up!");
             }
         }.start();
     		
@@ -317,5 +342,7 @@ public class View {
 //        popupmenu.show(e.getComponent(), e.getX(), e.getY());
     	System.out.println("row"+ rowindex);
 	}
+	
+	
 	
 }
